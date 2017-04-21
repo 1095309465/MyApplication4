@@ -28,6 +28,7 @@ public class MainActivity extends AppCompatActivity {
         setContentView(R.layout.activity_main);
         lv = (ListView) findViewById(R.id.lv);
         init();
+        //今天是12：01
     }
 
     //初始化数据
