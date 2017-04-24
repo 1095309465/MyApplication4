@@ -1,11 +1,14 @@
 package com.example.administrator.myapplication;
 
-import android.support.v7.app.AppCompatActivity;
+import android.app.Activity;
+import android.graphics.Bitmap;
 import android.os.Bundle;
-import android.support.v7.widget.ListViewCompat;
+import android.support.v7.app.AppCompatActivity;
 import android.util.Log;
 import android.view.View;
 import android.widget.ArrayAdapter;
+import android.widget.ImageView;
+import android.widget.LinearLayout;
 import android.widget.ListView;
 import android.widget.Toast;
 
@@ -21,12 +24,14 @@ public class MainActivity extends AppCompatActivity {
     ArrayAdapter<User> arrayAdapter;
     List<User> mList;
     DBManager dbManager;
+    ImageView iv;
 
     @Override
     protected void onCreate(Bundle savedInstanceState) {
         super.onCreate(savedInstanceState);
         setContentView(R.layout.activity_main);
         lv = (ListView) findViewById(R.id.lv);
+        iv = (ImageView) findViewById(R.id.iv);
         init();
         //今天是12：01
     }
@@ -72,7 +77,42 @@ public class MainActivity extends AppCompatActivity {
                 showList();
 
                 break;
+            case R.id.btn_jietu://截图
+                Bitmap bitmap = shotActivity(MainActivity.this);
+                if (bitmap != null)
+
+                    iv.setImageBitmap(bitmap);
+
+                break;
+
+            case R.id.iv://图片
+                LinearLayout.LayoutParams params = (LinearLayout.LayoutParams) iv.getLayoutParams();
+                params.width = LinearLayout.LayoutParams.MATCH_PARENT;
+                params.height = LinearLayout.LayoutParams.MATCH_PARENT;
+                iv.setLayoutParams(params);
+                iv.setScaleType(ImageView.ScaleType.FIT_XY);
+                break;
         }
+    }
+
+    /**
+     * shot the current screen ,with the status but the status is trans *
+     *
+     * @param ctx current activity
+     */
+    public static Bitmap shotActivity(Activity ctx) {
+
+        View view = ctx.getWindow().getDecorView();
+        view.setDrawingCacheEnabled(true);
+        view.buildDrawingCache();
+
+        Bitmap bp = Bitmap.createBitmap(view.getDrawingCache(), 0, 0, view.getMeasuredWidth(),
+                view.getMeasuredHeight());
+
+        view.setDrawingCacheEnabled(false);
+        view.destroyDrawingCache();
+
+        return bp;
     }
 
     private void showList() {
